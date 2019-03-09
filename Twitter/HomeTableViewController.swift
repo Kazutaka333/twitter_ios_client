@@ -21,8 +21,14 @@ class HomeTableViewController: UITableViewController {
         
         customRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         tableView.refreshControl = customRefreshControl
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 150
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        loadTweets()
+    }
     
     @objc func loadTweets() {
         let tweetsUrlString = "https://api.twitter.com/1.1/statuses/home_timeline.json"
@@ -81,7 +87,9 @@ class HomeTableViewController: UITableViewController {
         }
         
         cell.tweetContentLabel.text = tweetArray[indexPath.row]["text"] as? String
-
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        cell.setRetweeted(tweetArray[indexPath.row]["retweeted"] as! Bool)
         return cell
     }
     
